@@ -19,6 +19,7 @@
           {
             packages = with pkgs; [
               (python311.withPackages python-pkgs)
+              zig
             ];
 
             shellHook = ''
