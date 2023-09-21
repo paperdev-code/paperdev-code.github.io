@@ -4,7 +4,7 @@ import { SvgRasterizer } from "./SvgRasterizer.js"
 let renderer = new Renderer(document.getElementById("background"));
 let rasterizer = new SvgRasterizer(256, 256);
 
-const fps = 30;
+const fps = 0;
 const fps_interval = 1000 / fps;
 let then, now, elapsed;
 let resized = false;
