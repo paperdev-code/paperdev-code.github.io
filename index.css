@@ -1,0 +1,33 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.centered {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#about {
+    display: flex;
+    padding: 2cm;
+    border-radius: 3mm;
+    background-color: rgb(44, 44, 44);
+    /* opacity: 0; */
+    box-shadow: 0 0 1ex black;
+    color: white;
+}
+
+#background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background-color: rgb(25, 25, 25);
+}
