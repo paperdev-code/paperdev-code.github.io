@@ -77,10 +77,12 @@ const Quad = struct {
     }
 
     pub fn setOperation(quad: *Quad, op: Operation) void {
-        if (quad.operation == null) {
-            quad.operation = op;
-            quad.time = 0;
+        if (quad.operation) |_| {
+            quad.time = OPERATION_DURATION_MS + 1;
+            quad.update(0.0);
         }
+        quad.time = 0.0;
+        quad.operation = op;
     }
 
     pub fn update(quad: *Quad, dt: f32) void {
@@ -107,6 +109,7 @@ const Quad = struct {
 
         if (quad.operation == null) {
             quad.origin = quad.pos;
+            quad.time = 0;
         }
 
         inline for (0..2) |dim| {
@@ -191,7 +194,7 @@ const Grid = struct {
 
     pub fn update(dt: f32) void {
         time += dt;
-        if (time > 1000.0) {
+        if (time > 500.0) {
             time = 0.0;
             const col_or_row = rng.random().intRangeAtMost(u32, 0, SIZE - 1);
             if (rng.random().boolean()) {
