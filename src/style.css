@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply bg-[#111];
+}
+
+a {
+    @apply underline text-[#4a84d2];
+}
+
+b {
+    @apply text-[#47b5db];
+}
+
+@font-face {
+    font-family: FantasqueSansMonoRegular;
+    src: url("res/FantasqueSansMono-Regular.woff") format("woff");
+}
+
+@layer components {
+    #window {
+        @apply overflow-hidden;
+        @apply rounded-lg;
+    }
+
+    #navigation {
+        @apply overflow-hidden;
+        @apply rounded-md;
+    }
+
+    #navigation button {
+        @apply bg-stdout;
+        @apply w-3/5;
+        @apply p-4;
+        @apply rounded-md;
+    }
+
+    #window #decoration {
+        @apply bg-decoration text-stdoutfg;
+        @apply px-1;
+    }
+
+    #window #stdout {
+        @apply bg-stdout font-mono text-stdoutfg;
+        @apply p-2;
+        line-height: 1;
+        scrollbar-width: none;
+    }
+}
