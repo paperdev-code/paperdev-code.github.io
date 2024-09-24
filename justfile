@@ -2,6 +2,7 @@
 @build:
   mkdir -p docs
   @# copying static files
+  cp -r src/res docs/
   cp -r src/index.html docs/
   @# building tailwind css
   tailwindcss -i src/style.css -o docs/style.css -m
