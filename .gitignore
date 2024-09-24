@@ -1,5 +1,5 @@
 *
 !.gitignore
 !docs
-!docs/*
+!docs/**
 
