@@ -1,11 +1,202 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>Jorn Veken</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <p class="italic">Hello, world!</p>
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jorn Veken</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="h-screen">
+    <div class="h-full p-3 flex flex-col items-center desktop:justify-center">
+        <div class="h-full flex flex-col w-full gap-4 desktop:gap-2 desktop:w-2/5 desktop:min-w-dth desktop:h-1/2">
+            <div id="window" class="grow flex flex-col w-full">
+                <div id="decoration" class="flex">
+                    <span class="grow">&nbsp;</span>
+                    <button class="decoration-minimize"></button>
+                    <button class="decoration-maximize"></button>
+                    <button class="decoration-close"></button>
+                </div>
+                <div id="stdout" class="grow overflow-y-auto overflow-x-auto scrollbar-hide">
+                    <div><span class="text-user">guest@jorn.software</span>$&nbsp;<span id="exec" class="whitespace-pre"></span><span class="animate-pulse">_</span></div>
+                </div>
+            </div>
+            <div id="navigation" class="flex flex-col justify-between gap-4 min-h-fit desktop:gap-2 desktop:w-full desktop:flex-row">
+                <button class="bold italic text-[#f6e4af] self-start" onclick="projects();">Projects</button>
+                <button class="bold italic text-[#a8e5a1] self-center" onclick="work();">Work</button>
+                <button class="bold italic text-[#92affa] self-end" onclick="socials();">Links</button>
+            </div>
+        </div>
+
+        <div id="about" style="display: none;" class="flex flex flex-col gap-1 desktop:flex-row">
+            <p class="whitespace-pre bg-clip-text text-transparent bg-gradient-to-r from-[#91cefd] to-[#5a5ed7]">               .[>
+              ~%@@:
+             ^%@@@[.
+            [@@@@@@=
+          :}@@@@@@@}       -.......
+    ..~*)}@@@@@@@@@@^        .:=^(%#^.
+=#%@@@@@@%##}##%@@@@%:     :^(}(*:
+ >@@@@@@@@@@@@@@%[>*^*:*[@%}*.
+  )@@@@@@@@@@@@@@@@@@@%(=.
+  .[@@@@@@@@@@@@@@@@@)
+   :%@@@@@@@@@@@@@@@@)
+    :%@@@@@@@@@@@@@@@)
+     *%@@@@@@@@@@@@@@)
+     .)%@@@@@@@@@@@@@)
+        .^}%@@@@@@@@@)
+            .=>}%@@@@>
+                  ~(%>
+
+            </p>
+            <ul>
+                <li><b>paperdev</b>@<a href="#"><b>jorn.software</b></a></li>
+                <li>----------------------</li>
+                <li><b>Name</b>: Jorn Veken</li>
+                <li><b>Uptime</b>: 23 years</li>
+                <li><b>OS</b>: <span class="text-pink-300">Brain</span>/NixOS+WSL2</li>
+                <li><b>Location</b>: Netherlands</li>
+                <li><b>Education</b>: Applied CompSci</li>
+                <li><b>Occupation</b>: Software engineer</li>
+                <li><b>Interests</b>: Systems languages, Embedded</li>
+                <li><b>Languages</b>: Dutch, English</li>
+                <li><b>Battery</b>: Coffee</li>
+                <li><b>Skills:</b></li>
+                <li>
+                    <span class="skill-cpp">C/C++</span>
+                    <span class="skill-zig">Zig</span>
+                    <span class="skill-go">Go</span>
+                    <span class="skill-rust">Rust</span>
+                </li>
+                <li>
+                    <span class="skill-htmx">HTMX</span>
+                    <span class="skill-nu">Nu</span>
+                    <span class="skill-nix">Nix</span>
+                    <span class="skill-mcu">MCU</span>
+                </li>
+            </ul>
+        </div>
+
+        <div id="projects" style="display: none;">
+            <ul>
+                <li>total 4</li>
+                <li><span class="text-gray-500">drwxr-xr-x</span> paperdev .</li>
+                <li><span class="text-gray-500">drwxr-xr-x</span> paperdev ..</li>
+                <li><span class="text-gray-500">lr--r--r--</span> paperdev nix-flake -> <a href="#">github/nix-flake</a></li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+
+        <div id="work" style="display: none;">
+            <ul>
+                <li><a href="https://hgg-group.com" target="_blank" rel="noopener noreferrer">HGG Profiling Equipment</a>, Software Engineer, 2023 (active)</li>
+                <li><a href="https://hollandmechanics.com" target="_blank" rel="noopener noreferrer">Holland Mechanics</a>, Intern, 2022 (6mo)</li>
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+
+        <div id="socials" style="display: none;">
+            <div class="flex gap-2">
+                <a href="#">GitHub</a>
+                <a href="#">LinkedIn</a>
+            </div>
+            <p>&nbsp;</p>
+        </div>
+
+    </div>
+    <script>
+        class Mutex {
+            constructor() {
+                this.locked = false;
+                this.priorityQueue = [];
+            }
+
+            async lock() {
+                while (this.locked) {
+                    await new Promise((res) => this.priorityQueue.push(res));
+                }
+                this.locked = true;
+            }
+
+            unlock() {
+                this.locked = false;
+                if (this.priorityQueue.length > 0) {
+                    const res = this.priorityQueue.shift();
+                    res();
+                }
+            }
+        }
+
+        let mutex = new Mutex();
+        let stdout = document.getElementById("stdout");
+
+        async function print(any) {
+            let element = null;
+            if (typeof any === "string") {
+                let new_line = document.createElement("p");
+                new_line.innerText = any;
+                element = new_line;
+            } else {
+                console.assert(typeof any === "object");
+                element = any;
+                element.style.display = "";
+            }
+            stdout.insertBefore(element, stdout.lastElementChild);
+            stdout.scrollTop = stdout.scrollHeight;
+        }
+
+        function sleep(ms) {
+            return new Promise(res => setTimeout(res, ms))
+        }
+
+        async function write(text, speed = 40) {
+            let cmd_element = document.getElementById("exec");
+            for (idx = 0; idx < text.length; ++idx) {
+                cmd_element.innerText += text[idx];
+                await sleep(speed);
+            }
+            await sleep(200);
+            await print("$ " + text);
+            cmd_element.innerText = "";
+        }
+
+        async function about() {
+            await mutex.lock();
+            await write("fastfetch", 60);
+            let about_element = document.getElementById("about");
+            await print(about_element);
+            mutex.unlock();
+        }
+
+        async function projects() {
+            await mutex.lock();
+            await write("ls projects -alG");
+            let projects_element = document.getElementById("projects").cloneNode(true);
+            await print(projects_element);
+            mutex.unlock();
+        }
+
+        async function work() {
+            await mutex.lock();
+            await write("wget linkedin.com/in/jornveken")
+            let work_element = document.getElementById("work").cloneNode(true);
+            await print(work_element);
+            mutex.unlock();
+        }
+
+        async function socials() {
+            await mutex.lock()
+            await write("echo -e $LINKS");
+            let socials_element = document.getElementById("socials").cloneNode(true);
+            await print(socials_element);
+            mutex.unlock();
+        }
+
+        window.onload = async function (_) {
+            about();
+        };
+    </script>
+</body>
+
 </html>
